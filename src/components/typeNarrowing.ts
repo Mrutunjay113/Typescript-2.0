@@ -74,3 +74,35 @@ function serverOrder(item: ChaiOrder | string) {
 
 console.log(serverOrder({ type: "sugar", sugar: 10 }));
 console.log(serverOrder("sugar"));
+
+type MasalaChai = { type: "masala"; spiceLevel: number };
+type GingerChai = { type: "ginger"; amount: number };
+type ElaichiChai = { type: "elaichi"; aroma: number };
+
+type Chai = MasalaChai | GingerChai | ElaichiChai;
+
+function MakeChai(order: Chai) {
+  switch (order.type) {
+    case "masala":
+      return `Making ${order.spiceLevel} masala chai`;
+    case "ginger":
+      return `Making ${order.amount} ginger chai`;
+    case "elaichi":
+      return `Making ${order.aroma} elaichi chai`;
+    default:
+      return `Making default chai`;
+  }
+}
+
+function bew(order: MasalaChai | GingerChai | ElaichiChai) {
+  if ("spiceLevel" in order) {
+    return `Making ${order.spiceLevel} masala chai`;
+  }
+  if ("amount" in order) {
+    return `Making ${order.amount} ginger chai`;
+  }
+  if ("aroma" in order) {
+    return `Making ${order.aroma} elaichi chai`;
+  }
+  return `Making default chai`;
+}
