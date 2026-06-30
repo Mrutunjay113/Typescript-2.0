@@ -26,14 +26,14 @@ interface CupSize {
   size: "small" | "medium" | "large";
 }
 
-class Chai implements CupSize {
+class Chai1 implements CupSize {
   size: "small" | "medium" | "large" = "small";
 }
 
 // Union Type (OR) literal types
 type TeaType = "masala" | "ginger" | "lemon";
 
-function orderChai(t: TeaType) {
+function orderChai1(t: TeaType) {
   console.log(t);
 }
 
@@ -44,9 +44,9 @@ type BaseChai = {
 type Extra = { masala: number };
 
 // Intersection Type (AND) object types
-type MasalaChai = BaseChai & Extra;
+type MasalaChai1 = BaseChai & Extra;
 
-const cup: MasalaChai = {
+const cup: MasalaChai1 = {
   masala: 10,
   teaLeaves: 100,
 };
