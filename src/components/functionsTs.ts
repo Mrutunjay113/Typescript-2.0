@@ -65,5 +65,5 @@ function createChai(order: {
   // Function return type is explicitly number
 }): number {
   // Returns sugar plus 10 as a simple computed number
-  return order.sugar + 10;
+  return order.sugar + 10; //number
 }
