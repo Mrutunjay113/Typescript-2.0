@@ -1,14 +1,22 @@
 /**
- * TOPICS COVERED — Type inference & conditional values
- * ----------------------------------------------------
- * 1. Type inference: TypeScript figures out the type from the value
- * 2. Ternary expressions that produce different numbers
- * 3. Math.random() used to pick between two outcomes
+ * TOPICS — Type inference
+ * -----------------------
+ * You do not always write a type. TypeScript looks at the value you assign
+ * and picks the type for you. That is inference.
+ *
+ * What you practice here:
+ * - Inferring string from a string literal
+ * - Inferring number from both sides of a ternary
+ * - Using Math.random() to pick one of two numbers
+ *
+ * EXAMPLE USES
+ * - drink = "hello" → a label or toast message (inferred as string)
+ * - cups = 10 or 5 → random stock / A-B test quantity (inferred as number)
+ * - Later you can write drink.toUpperCase() safely, but not drink + true
  */
 
-// Declares drink; TypeScript infers type string from the "hello" value
+// What I did: assigned "hello". I did not write : string; TS inferred string.
 let drink = "hello";
-// Declares cups; Math.random() > 0.5 is true about half the time
-// If true → cups is 10; if false → cups is 5
-// TypeScript infers cups as number (both branches are numbers)
+// What I did: if a random number is above 0.5, cups is 10; otherwise 5.
+// Both branches are numbers, so TS infers cups as number.
 let cups = Math.random() > 0.5 ? 10 : 5;

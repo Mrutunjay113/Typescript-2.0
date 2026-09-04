@@ -1,143 +1,150 @@
 /**
- * TOPICS COVERED — Arrays, tuples, and enums
- * -------------------------------------------
- * 1. Typed arrays: string[], number[], Array<T>
- * 2. Arrays of custom object types (type aliases)
- * 3. readonly arrays (cannot push/pop/mutate)
- * 4. Multidimensional arrays (number[][])
- * 5. Tuples: fixed length + typed positions
- * 6. Optional tuple elements and labeled tuple slots
- * 7. Numeric enums, string enums, heterogeneous enums
- * 8. const enums (often inlined at compile time)
+ * TOPICS — Arrays, tuples, and enums
+ * ----------------------------------
+ * Arrays hold many values of one type. Tuples hold a fixed list with a
+ * known type at each position. Enums name a small set of related values
+ * (sizes, statuses) instead of raw numbers or strings.
+ *
+ * What you practice here:
+ * - string[], number[], Array<Number>
+ * - Arrays of custom objects (ChaiType[])
+ * - readonly arrays and 2D arrays
+ * - Tuples, optional slots, labeled slots, readonly tuples
+ * - Numeric, string, mixed, and const enums
+ *
+ * EXAMPLE USES
+ * - chaiFlavours1 → menu flavour chips
+ * - menu → shop catalog [{ name, price }, ...]
+ * - cities → locked city list you should not mutate
+ * - table → spreadsheet / grid of numbers
+ * - chaiTuple → [flavour, price] pair from a scanner
+ * - CupSize1 / Status → cup size picker or order status
  */
 
-// Array of strings: every element must be a string
+// What I did: made a string-only list of chai flavours.
 const chaiFlavours1: string[] = ["Masala", "Adrak"];
-// Array of numbers: every element must be a number
+// What I did: made a number-only list of prices.
 const chaiPrices: number[] = [10, 20];
-// Generic Array<Number> form (same idea as number[], but Number is the object wrapper type)
+// What I did: used the generic Array<Number> form for ratings.
 const rating: Array<Number> = [4.5, 4.7, 4.8];
 
-// Type alias for a chai menu item object
+// What I did: named a reusable object shape for one menu item.
 type ChaiType = {
-  // Display name of the chai
+  // What I did: required a display name.
   name: string;
-  // Price of the chai
+  // What I did: required a price.
   price: number;
 };
 
-// Array where each element must match ChaiType
+// What I did: made a list where every item must match ChaiType.
 const menu: ChaiType[] = [
-  // First menu item object
+  // What I did: added the first catalog row.
   { name: "Masala", price: 10 },
-  // Second menu item object
+  // What I did: added the second catalog row.
   { name: "Adrak", price: 20 },
 ];
 
-// readonly string[]: you cannot push/pop or reassign elements
+// What I did: made a city list that cannot be push/pop/changed later.
 const cities: readonly string[] = ["Mumbai", "Delhi", "Chennai"];
 
-// Multidimensional (2D) array: array of number arrays
+// What I did: made a 2D grid: an array of number arrays.
 const table: number[][] = [
-  // First row
+  // What I did: first row of the grid.
   [1, 2, 3],
-  // Second row
+  // What I did: second row of the grid.
   [4, 5, 6],
 ];
 
-// Tuple: fixed-length array with known types per position
-// Index 0 is string, index 1 is number
+// What I did: made a 2-slot tuple: [flavour string, price number].
 let chaiTuple: [string, number] = ["Masala", 10];
 
-// Reassigning the whole tuple with another valid [string, number] pair
+// What I did: replaced the whole tuple with another valid pair.
 chaiTuple = ["Adrak", 20];
 
-// Tuple with an optional third boolean element (?)
+// What I did: declared a tuple whose third boolean slot is optional.
 let userInfo: [number, string, boolean?];
-// All three positions filled
+// What I did: filled all three slots (id, name, flag).
 userInfo = [1, "John", true];
-// Third element omitted because it is optional
+// What I did: omitted the optional third slot.
 userInfo = [1, "John"];
 
-// Readonly tuple: contents cannot be mutated after creation
+// What I did: made a tuple that cannot be mutated after creation.
 let readonlyChaiTuple: readonly [string, number] = ["Masala", 10];
 
-// Labeled tuple elements: names are for documentation/readability only
+// What I did: labeled the tuple slots (names are for readability only).
 const chaiItems2: [name: string, price: number] = ["Masala", 10];
 
-// Block used only as a visual section marker for enums
+// What I did: used an empty block only as a visual "Enums" section break.
 {
   /* -------------------------- Enums -------------------------- */
 }
 
-// Numeric enum: SMALL=0, MEDIUM=1, LARGE=2 by default (auto-increment from 0)
+// What I did: created a numeric enum (SMALL=0, MEDIUM=1, LARGE=2).
 enum CupSize1 {
-  // First member → 0
+  // What I did: first member → 0.
   SMALL,
-  // Second member → 1
+  // What I did: second member → 1.
   MEDIUM,
-  // Third member → 2
+  // What I did: third member → 2.
   LARGE,
 }
 
-// Reads the LARGE member value from the enum (number 2)
+// What I did: read the LARGE member (the number 2).
 const size = CupSize1.LARGE;
 
-// Prefer named/string enums over auto-incremented numeric ones in most code
-// Enum with a custom starting value; later members auto-increment
+// What I did: started an enum at 100 so later members become 101, 102.
 enum Status {
-  // Explicitly start at 100
+  // What I did: set PENDING to 100 on purpose.
   PENDING = 100,
-  // Becomes 101 automatically
+  // What I did: let SERVED auto-increment to 101.
   SERVED,
-  // Becomes 102 automatically
+  // What I did: let CANCELLED auto-increment to 102.
   CANCELLED,
 }
 
-// String enum: each member has an explicit string value
+// What I did: created a string enum so values stay readable in logs.
 enum ChaiTypeEnum {
-  // Member MASALA holds the string "Masala"
+  // What I did: mapped MASALA to the string "Masala".
   MASALA = "Masala",
-  // Member ADRAK holds the string "Adrak"
+  // What I did: mapped ADRAK to the string "Adrak".
   ADRAK = "Adrak",
 }
 
-// Function parameter must be a ChaiTypeEnum member
+// What I did: wrote a function that only accepts a ChaiTypeEnum member.
 function makeChai4(type: ChaiTypeEnum) {
-  // Logs which chai type is being made (uses the enum's string value)
+  // What I did: logged which enum value is being made.
   console.log(`Making ${type} chai`);
 }
 
-// Call with the MASALA enum member
+// What I did: called the function with MASALA.
 makeChai4(ChaiTypeEnum.MASALA);
-// Call with the ADRAK enum member
+// What I did: called the function with ADRAK.
 makeChai4(ChaiTypeEnum.ADRAK);
 
-// Mixing value kinds in one enum is generally discouraged
-// Heterogeneous enum: mixes number and string members (usually avoided)
+// What I did: mixed a number and a string in one enum (usually avoided).
 enum RandomEnum {
-  // Numeric member
+  // What I did: numeric member ID = 1.
   ID = 1,
-  // String member in the same enum
+  // What I did: string member NAME = "John".
   NAME = "John",
 }
 
-// const enum: inlined at compile time (no runtime enum object in many configs)
+// What I did: used a const enum so values can be inlined at compile time.
 const enum Sugars {
-  // Low sugar level → 1
+  // What I did: low sugar → 1.
   LOW = 1,
-  // Medium sugar level → 2
+  // What I did: medium sugar → 2.
   MEDIUM = 2,
-  // High sugar level → 3
+  // What I did: high sugar → 3.
   HIGH = 3,
 }
 
-// Uses the MEDIUM member (compiles to the literal 2 when const enums are inlined)
+// What I did: read Sugars.MEDIUM (often compiled to the literal 2).
 const s = Sugars.MEDIUM;
 
-// Mutable tuple variable
+// What I did: created a mutable [string, number] tuple.
 let t: [string, number] = ["Masala", 10];
-// Tuples still allow .push at runtime in TypeScript's typing (known quirk)
+// What I did: pushed extra values — TS still allows .push on tuples (known quirk).
 t.push("Adrak", 20);
-// Invalid push types would error — commented example of a type mismatch
+// What I did: left a bad push commented out to show a type mismatch.
 // t.push(3, "Adrak");

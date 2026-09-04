@@ -1,109 +1,115 @@
 /**
- * TOPICS COVERED — Assertions, any, unknown, and roles
- * -----------------------------------------------------
- * 1. Type assertions (`as Type`) — tell TS to treat a value as a type
- * 2. any — disables type checking (unsafe; can hide bugs)
- * 3. unknown — safer "I don't know the type yet"; must narrow before use
- * 4. JSON.parse + asserting the result shape
- * 5. DOM assertions (HTMLElement → HTMLInputElement)
- * 6. Narrowing unknown with typeof and instanceof
- * 7. String literal unions for roles / control flow
+ * TOPICS — Assertions, any, unknown, and role literals
+ * ----------------------------------------------------
+ * `as Type` tells TypeScript "treat this value as that type." It does not
+ * convert the value at runtime. `any` turns checking off. `unknown` is safer:
+ * you must narrow (typeof / instanceof) before you use the value.
+ *
+ * What you practice here:
+ * - Type assertions (`as string`, `as Book`, `as HTMLInputElement`)
+ * - any vs unknown
+ * - JSON.parse + asserting a shape
+ * - Catch-block narrowing
+ * - Role union + early returns
+ *
+ * EXAMPLE USES
+ * - (response as string).length → you know an API field is text
+ * - JSON.parse(...) as Book → typed book after reading JSON
+ * - getElementById(...) as HTMLInputElement → read .value from an input
+ * - unknown + typeof → safe handling of mixed runtime data
+ * - redirectBasesOnRole("admin") → send the user to the right page
  */
 
-// Forceful type assertion: tells TypeScript to treat a value as a different type
-
-// Declares response as any (opts out of type checking for this variable)
+// What I did: stored a string in an any variable (checking is off).
 let response: any = "42";
 
-// Asserts response is a string, then reads .length into a number variable
-// Without `as string`, TypeScript would not know response has .length safely
+// What I did: asserted response is a string so I could read .length as a number.
 let numericLength: number = (response as string).length;
 
-// Defines a Book type alias: an object that must have a string name property
+// What I did: named a Book shape with a required name.
 type Book = {
-  // name is required and must be a string
+  // What I did: required name to be a string.
   name: string;
 };
 
-// A JSON-looking string that will be parsed into an object
+// What I did: stored a JSON string that looks like a book object.
 let bookString = '{ "name": "The Great Gatsby" }';
 
-// JSON.parse returns any; `as Book` asserts the result matches the Book shape
+// What I did: parsed JSON and asserted the result is a Book.
 let bookObject: Book = JSON.parse(bookString) as Book;
 
-// Logs the name property from the asserted Book object
+// What I did: printed the book's name after the assertion.
 console.log(bookObject.name);
 
-// document.getElementById returns HTMLElement | null; assert it is an input element
+// What I did: looked up a DOM node and asserted it is an <input>.
 const inputElement = document.getElementById("username") as HTMLInputElement;
 
-// Declares value as any — can be reassigned to any type without errors
+// What I did: declared value as any so any type is allowed later.
 let value: any;
-// Assigns a string to value (allowed because of any)
+// What I did: assigned a string (allowed because of any).
 value = "chai";
-// Reassigns value to a number array (also allowed because of any)
+// What I did: reassigned a number array (also allowed because of any).
 value = [1, 2, 3, 4, 5];
 
-// Calls toUpperCase on value; any allows this even though arrays lack toUpperCase
-// This may fail at runtime — any disables compile-time safety
+// What I did: called toUpperCase — TS allows it on any, but an array will crash at runtime.
 value.toUpperCase();
 
-// Declares newValue as unknown — safer than any; must narrow before using
+// What I did: declared unknown — I can assign anything, but I cannot use it yet.
 let newValue: unknown;
-// Assigning a string is allowed (unknown accepts any assignment)
+// What I did: assigned a string to unknown.
 newValue = "chai";
-// Reassigning to a number is also allowed
+// What I did: reassigned a number.
 newValue = 10;
-// Reassigning to a boolean is also allowed
+// What I did: reassigned a boolean.
 newValue = true;
-// Narrows newValue: inside this block TypeScript knows it is a string
+// What I did: narrowed with typeof so TS knows it is a string inside the block.
 if (typeof newValue === "string") {
-  // Safe to call string methods after the typeof check
+  // What I did: called a string method only after the check.
   newValue.toUpperCase();
 }
 
-// Starts a try block (empty here — would hold code that might throw)
+// What I did: opened a try block (empty demo of code that might throw).
 try {
-  // Intentionally empty example body
+  // What I did: left the body empty on purpose.
 } catch (error) {
-  // In catch, error is unknown (or any depending on config); narrow it
+  // What I did: checked whether the thrown value is a real Error object.
   if (error instanceof Error) {
-    // After instanceof, error is Error — .message is safe
+    // What I did: printed Error.message after instanceof narrowing.
     console.log(error.message);
   } else {
-    // Non-Error throw values (string, number, etc.)
+    // What I did: handled non-Error throws (string, number, etc.).
     console.log("An error occurred");
   }
 }
 
-// Declares data as unknown with a string value
+// What I did: stored a string in an unknown constant.
 const data: unknown = "chai is good";
-// Asserts data is string and stores it in strData
+// What I did: asserted data is a string and copied it.
 const strData: string = data as string;
-// Prints the asserted string
+// What I did: printed the asserted string.
 console.log(strData);
 
-// Role is a union of three allowed string literals
+// What I did: allowed only three role words.
 type Role = "admin" | "user" | "guest";
 
-// Function takes a Role and returns void (no return value used)
+// What I did: wrote a void function that branches on Role.
 function redirectBasesOnRole(role: Role): void {
-  // If role is exactly "admin", handle admin redirect
+  // What I did: handled the admin role first.
   if (role === "admin") {
-    // Admin-specific page redirect message
+    // What I did: logged the admin redirect.
     console.log("Redirecting to admin page");
-    // Exit the function early
+    // What I did: left the function so later branches do not run.
     return;
   }
-  // If role is exactly "user", handle user redirect
+  // What I did: handled the user role.
   if (role === "user") {
-    // User-specific page redirect message
+    // What I did: logged the user redirect.
     console.log("Redirecting to user page");
-    // Exit the function early
+    // What I did: left the function early.
     return;
   }
-  // Remaining case must be "guest" given the Role union
+  // What I did: treated the leftover role as guest.
   console.log("Redirecting to guest page");
-  // Explicit return for consistency (void)
+  // What I did: returned explicitly (still void).
   return;
 }

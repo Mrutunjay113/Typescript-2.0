@@ -1,39 +1,48 @@
 /**
- * TOPICS COVERED — TypeScript basics
- * ------------------------------------
- * 1. Function parameter types and return types
- * 2. Primitive types: string, number, boolean
- * 3. Array types (string[])
- * 4. Inline object types ({ name: string; age: number })
- * 5. Calling typed functions and logging values
+ * TOPICS — TypeScript basics
+ * --------------------------
+ * TypeScript adds types on top of JavaScript so mistakes (wrong value kinds)
+ * show up while you write code, not only when the app runs.
+ *
+ * What you practice here:
+ * - Function parameter types and return types
+ * - Primitive types: string, number, boolean
+ * - Array types (string[])
+ * - Inline object types ({ name: string; age: number })
+ * - Calling a typed function and printing values
+ *
+ * EXAMPLE USES
+ * - greet("Ada") → "Hello, Ada!" for a welcome banner
+ * - username / age / isStudent as form fields on a signup page
+ * - hobbies as a list of tags under a profile
+ * - person as one user record sent to an API
  */
 
-// Declares a function named greet that takes one argument
-// name must be a string (TypeScript will error if you pass another type)
-// : string after the parentheses means this function returns a string
+// What I did: declared greet so it only accepts a string name
+// and must return a string (the greeting text).
 function greet(name: string): string {
-  // Returns a template string that inserts the name value
+  // What I did: built the greeting by inserting name into a template string.
   return `Hello, ${name}!`;
 }
 
-// Declares a constant username; TypeScript knows it is a string
+// What I did: stored a string user name. Only other strings can replace this type.
 const username: string = "John";
-// Declares a constant age; must be a number
+// What I did: stored a numeric age.
 const age: number = 20;
-// Declares a constant isStudent; must be true or false
+// What I did: stored a true/false student flag.
 const isStudent: boolean = true;
-// Declares hobbies as an array where every element must be a string
+// What I did: stored a list where every item must be a string.
 const hobbies: string[] = ["reading", "coding", "gaming"];
-// Declares person as an object that must have name (string) and age (number)
+// What I did: stored one object that must have name (string) and age (number).
 const person: { name: string; age: number } = { name: "John", age: 20 };
 
-// Calls greet with username and prints the returned greeting
+// What I did: called greet with username and printed the result.
 console.log(greet(username));
-// Prints the age number
+// What I did: printed age.
 console.log(age);
-// Prints the boolean isStudent
+// What I did: printed the student flag.
 console.log(isStudent);
-// Prints the hobbies array
+// What I did: printed the hobbies list.
 console.log(hobbies);
-// Prints the person object
+// What I did: printed the person object.
 console.log(person);

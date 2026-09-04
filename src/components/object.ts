@@ -1,203 +1,212 @@
 /**
- * TOPICS COVERED — Object types and utility types
- * ------------------------------------------------
- * 1. Inferred vs explicit object types
- * 2. type aliases for reusable object shapes
- * 3. Structural / duck typing (shape compatibility)
- * 4. Excess property checks vs assigning existing variables
- * 5. Composing larger types from smaller ones
- * 6. Utility types: Partial, Required, Pick, Omit
+ * TOPICS — Object types and utility types
+ * ---------------------------------------
+ * Objects are named key–value pairs. TypeScript can infer the shape, or you
+ * can write it yourself. Compatibility is structural ("duck typing"): if it
+ * has the required fields, it matches. Utility types transform existing types
+ * (Partial, Required, Pick, Omit) instead of rewriting them by hand.
+ *
+ * What you practice here:
+ * - Inferred vs explicit object types
+ * - type aliases
+ * - Assigning objects that share a shape
+ * - Extra properties when assigning from a variable
+ * - Partial, Required, Pick, Omit
+ *
+ * EXAMPLE USES
+ * - chai / tea → one drink card on a menu
+ * - Tea.ingredients → recipe list
+ * - smallCup = bigCup → both are just { size: string }
+ * - chaiBrew = coffee → coffee has extra beans; Brew only needs brewTime
+ * - updatedChai({ price: 25 }) → PATCH-style update (Partial)
+ * - placeOrder(...) → checkout that requires every field (Required)
+ * - BasicChaiInfo / PublicChaiInfo → public API without secrets
  */
 
-// Object Types: values stored as named key–value pairs
-
-// Object literal; TypeScript infers name:string, price:number, isHot:boolean
+// What I did: created an object and let TS infer name, price, and isHot.
 const chai = {
-  // Inferred as string
+  // What I did: set the drink name (inferred string).
   name: "Masala Chai",
-  // Inferred as number
+  // What I did: set the price (inferred number).
   price: 20,
-  // Inferred as boolean
+  // What I did: set hot/cold (inferred boolean).
   isHot: true,
 };
 
-// Declares tea with an explicit inline object type (not assigned yet)
+// What I did: declared tea with an explicit inline type (no value yet).
 let tea: {
-  // Must have a string name
+  // What I did: required name.
   name: string;
-  // Must have a number price
+  // What I did: required price.
   price: number;
-  // Must have a boolean isHot
+  // What I did: required isHot.
   isHot: boolean;
 };
 
-// Assigns a matching object to tea
+// What I did: assigned an object that matches that inline type.
 tea = {
-  // Satisfies name: string
+  // What I did: filled name.
   name: "Masala Chai",
-  // Satisfies price: number
+  // What I did: filled price.
   price: 20,
-  // Satisfies isHot: boolean
+  // What I did: filled isHot.
   isHot: true,
 };
 
-// Type alias: reusable name for an object shape
+// What I did: named a reusable Tea shape including an ingredients list.
 type Tea = {
-  // Display name
+  // What I did: required name.
   name: string;
-  // Price in currency units
+  // What I did: required price.
   price: number;
-  // ingredients must be an array of strings
+  // What I did: required a string array of ingredients.
   ingredients: string[];
 };
 
-// Variable typed as Tea — must include all required fields
+// What I did: created one Tea value with all required fields.
 const adrakChai: Tea = {
-  // Required name
+  // What I did: set the name.
   name: "Adrak Chai",
-  // Required price
+  // What I did: set the price.
   price: 30,
-  // Required ingredients list
+  // What I did: listed the ingredients.
   ingredients: ["Adrak", "Chai", "Ginger", "Honey"],
 };
 
-// Duck typing: compatibility is based on shape, not declared type name
-
+// What I did: defined Cup as "anything with a size string".
 type Cup = {
-  // Only requires a size string
+  // What I did: required only size.
   size: string;
 };
 
-// smallCup matches Cup
+// What I did: made a small cup that matches Cup.
 let smallCup: Cup = {
-  // Only required field
+  // What I did: set size to 200ml.
   size: "200ml",
 };
 
-// bigCup also matches Cup
+// What I did: made a big cup that also matches Cup.
 let bigCup: Cup = { size: "400ml" };
 
-// Assignment works because both share the same required shape
+// What I did: assigned bigCup to smallCup because both have { size: string }.
 smallCup = bigCup;
 
 type Brew = {
-  // Only brewTime is required by Brew
+  // What I did: required only brewTime.
   brewTime: number;
 };
-// coffee has brewTime plus an extra beans property
+// What I did: created coffee with brewTime plus an extra beans field.
 const coffee = { brewTime: 10, beans: "arabica" };
 
-// Extra properties are allowed when assigning from an existing variable (excess property check is relaxed here)
+// What I did: assigned coffee to Brew — extra fields are OK from an existing variable.
 const chaiBrew: Brew = coffee;
 
 type User1 = {
-  // Login name
+  // What I did: required username.
   username: string;
-  // Secret password string
+  // What I did: required password.
   password: string;
 };
 
-// Object that satisfies User1
+// What I did: created a User1 object with both fields.
 const u3: User1 = { username: "John", password: "123456" };
 
-// Split larger concepts into smaller reusable types
+// What I did: split a larger idea into smaller reusable types.
 
 type Item = {
-  // Item display name
+  // What I did: required item name.
   name: string;
-  // How many of this item
+  // What I did: required quantity.
   quantity: number;
 };
 
 type Address = {
-  // Street line
+  // What I did: required street.
   street: string;
-  // City name
+  // What I did: required city.
   city: string;
-  // State / region
+  // What I did: required state.
   state: string;
-  // Postal code
+  // What I did: required zip.
   zip: string;
 };
 
 type Order1 = {
-  // Unique order id
+  // What I did: required an order id.
   id: number;
-  // items is an array of Item objects
+  // What I did: required a list of Item objects.
   items: Item[];
 };
 
 type Chai2 = {
-  // Chai name
+  // What I did: required name.
   name: string;
-  // Chai price
+  // What I did: required price.
   price: number;
-  // Whether it is served hot
+  // What I did: required isHot.
   isHot: boolean;
 };
 
-// Partial<T> makes every property of T optional
+// What I did: used Partial so every Chai2 field becomes optional for updates.
 const updatedChai = (updates: Partial<Chai2>) => {
-  // Spreads original chai then overlays only the provided updates
+  // What I did: copied chai, then overwrote only the fields in updates.
   return { ...chai, ...updates };
 };
 
-// Calls updatedChai with only price changed (other fields optional via Partial)
+// What I did: updated only price; Partial allows skipping the other fields.
 updatedChai({ price: 25 });
 
 type ChaiOrder2 = {
-  // Optional name
+  // What I did: made name optional on the base type.
   name?: string;
-  // Optional quantity
+  // What I did: made quantity optional on the base type.
   quantity?: number;
 };
 
-// Required<T> makes every property of T required (undoes ?)
+// What I did: used Required so both optional fields become required here.
 const placeOrder = (order: Required<ChaiOrder2>) => {
-  // Logs the fully-required order object
+  // What I did: logged the complete order.
   console.log(order);
 };
-// Both name and quantity must be provided because of Required
+// What I did: passed both fields because Required demands them.
 placeOrder({
-  // Now required by Required<ChaiOrder2>
+  // What I did: provided name.
   name: "Masala Chai",
-  // Now required by Required<ChaiOrder2>
+  // What I did: provided quantity.
   quantity: 1,
 });
 
 type Chai3 = {
-  // Name field
+  // What I did: included name.
   name: string;
-  // Price field
+  // What I did: included price.
   price: number;
-  // Hot/cold flag
+  // What I did: included isHot.
   isHot: boolean;
-  // List of ingredients
+  // What I did: included ingredients.
   ingredients: string[];
 };
 
-// Pick<T, Keys> builds a type with only the listed keys from T
+// What I did: picked only name and price from Chai3.
 type BasicChaiInfo = Pick<Chai3, "name" | "price">;
-// Must only include name and price (not isHot or ingredients)
+// What I did: created an object with only those two picked fields.
 const chaiInfo2: BasicChaiInfo = {
-  // Picked from Chai3
+  // What I did: set name.
   name: "Masala Chai",
-  // Picked from Chai3
+  // What I did: set price.
   price: 20,
 };
 
-// Omit removes listed keys from a type
-
 type Chai4 = {
-  // Public name
+  // What I did: included a public name.
   name: string;
-  // Public price
+  // What I did: included a public price.
   price: number;
-  // Should stay internal / hidden from public API types
+  // What I did: included a secret that should not leak in public types.
   secretIngredient: string;
-  // Public hot flag
+  // What I did: included isHot.
   isHot: boolean;
 };
 
-// PublicChaiInfo has name, price, and isHot — but not secretIngredient
+// What I did: omitted secretIngredient so the public type cannot include it.
 type PublicChaiInfo = Omit<Chai4, "secretIngredient">;

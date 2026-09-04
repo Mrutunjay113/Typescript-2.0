@@ -1,175 +1,175 @@
 /**
- * TOPICS COVERED — Object-oriented TypeScript (classes)
- * ------------------------------------------------------
- * 1. Classes, constructors, and creating instances with `new`
- * 2. Access modifiers: public, private, protected
- * 3. Inheritance with extends
- * 4. True JS private fields (#field)
- * 5. readonly properties
- * 6. Getters and setters with validation
- * 7. Static members (belong to the class, not instances)
- * 8. Parameter properties in constructors
- * 9. Abstract classes and required method implementations
- * 10. Composition (has-a) vs inheritance (is-a)
+ * TOPICS — Classes (object-oriented TypeScript)
+ * ---------------------------------------------
+ * A class is a blueprint. `new` creates an instance. Access modifiers
+ * control who can read a field. Inheritance (extends) is "is-a".
+ * Composition is "has-a": a machine holds a heater instead of being one.
+ *
+ * What you practice here:
+ * - Constructors and instances
+ * - public / private / protected
+ * - #private fields (real JS privacy)
+ * - readonly, getters/setters, static members
+ * - Parameter properties
+ * - Abstract classes
+ * - Composition
+ *
+ * EXAMPLE USES
+ * - new ChaiMaker("masala") → one machine set to masala
+ * - Shop / Branch → branch can read protected shopName
+ * - Wallet.#balance → money hidden; only getBalance() shows it
+ * - ModernChai.sugar = 10 → setter blocks invalid sugar
+ * - EkChai.shopName → one shop name shared by the whole class
+ * - ChaiMakerMachine(heater) → reuse Heater without inheriting it
  */
 
-// Declares a class named ChaiMaker (blueprint for chai-maker objects)
+// What I did: declared a class that stores one flavour.
 class ChaiMaker {
-  // Instance property flavour must be a string (assigned in the constructor)
+  // What I did: said every instance has a string flavour (set in the constructor).
   flavour: string;
 
-  // Constructor runs when you create an instance with `new`
+  // What I did: ran this setup code whenever someone writes `new ChaiMaker(...)`.
   constructor(flavour: string) {
-    // Stores the constructor argument on the instance
+    // What I did: saved the argument onto the instance.
     this.flavour = flavour;
   }
 }
 
-// Creates an instance of ChaiMaker with flavour "masala"
+// What I did: created one ChaiMaker instance with flavour "masala".
 const masalaChai = new ChaiMaker("masala");
 
-// Access modifiers control where properties/methods can be used
-
 class ChaiMaker2 {
-  // public: accessible from anywhere (default if you omit the modifier)
+  // What I did: marked flavour public (anyone can read/write it).
   public flavour: string = "masala";
-  // private: only usable inside this class body
+  // What I did: hid the recipe string so only this class can use it.
   private secretIngredients = "Cardamom";
 
-  // Method that can still read the private field (same class)
+  // What I did: added a method that can still read the private field.
   reveal() {
-    // Allowed: private members are visible inside the declaring class
+    // What I did: returned the private ingredient from inside the class.
     return this.secretIngredients;
   }
 }
 
-// Base class with a protected field
+// What I did: made a base shop class with a protected name.
 class Shop {
-  // protected: visible in this class and subclasses, not from outside
+  // What I did: allowed this class and subclasses to read shopName, not outsiders.
   protected shopName = "Chai Wala";
 }
 
-// Branch inherits from Shop (gets Shop's members)
+// What I did: made Branch inherit Shop (it is-a Shop).
 class Branch extends Shop {
-  // Public method that exposes the protected shop name safely
+  // What I did: exposed the protected name through a public method.
   getShopName() {
-    // Allowed: subclass can read protected members from the parent
+    // What I did: read shopName from the parent (allowed because of protected).
     return this.shopName;
   }
 }
 
-// Creates a Branch instance
+// What I did: created a Branch instance.
 const branch = new Branch();
-// Calls the public method; protected shopName itself is not accessed here directly
+// What I did: called the public getter (I did not read shopName directly).
 branch.getShopName();
 
 class Wallet {
-  // #balance is a true JS private field (hard privacy, not just TypeScript)
+  // What I did: used a real JS private field so even JS outside cannot see it.
   #balance = 100;
-  // Public method that exposes the private balance safely
+  // What I did: added a public method to read the hidden balance.
   getBalance() {
-    // Only code inside Wallet can read #balance
+    // What I did: returned #balance from inside Wallet only.
     return this.#balance;
   }
 }
 
-// Creates a Wallet instance
+// What I did: created a Wallet.
 const w = new Wallet();
-// References the getBalance method (note: not calling it — missing ())
+// What I did: referenced getBalance but did not call it (missing ()).
 w.getBalance;
 
-// readonly: can be set in the declaration/constructor, not reassigned later
 class Cup5 {
-  // Initial default capacity; still overridable in the constructor
+  // What I did: set a default capacity that can still be overwritten in the constructor.
   readonly capacity: number = 250;
-  // Constructor accepts a capacity override
+  // What I did: accepted a capacity when creating the cup.
   constructor(capacity: number) {
-    // Allowed: readonly can be assigned inside the constructor
+    // What I did: assigned capacity here — allowed because we are still in the constructor.
     this.capacity = capacity;
   }
 }
 
-// Creates a Cup5 with capacity 300
+// What I did: created a cup with capacity 300.
 const c = new Cup5(300);
-// Would error: cannot assign to a readonly property after construction
+// What I did: left a later assignment commented — readonly would error.
 // c.capacity = 300;
 
-// Getters and setters: property-like access with custom logic
-
 class ModernChai {
-  // Backing field (private) stores the real sugar value
+  // What I did: stored sugar in a private backing field, default 2.
   private _sugar = 2;
 
-  // Getter: reading m.sugar runs this method
+  // What I did: added a getter so `m.sugar` reads _sugar.
   get sugar() {
-    // Returns the current private sugar amount
+    // What I did: returned the current sugar amount.
     return this._sugar;
   }
-  // Setter: writing m.sugar = x runs this method with x as sugar
+  // What I did: added a setter so `m.sugar = x` validates then stores x.
   set sugar(sugar: number) {
-    // Rejects negative amounts
+    // What I did: rejected negative sugar.
     if (sugar < 0) throw new Error("Sugar cannot be negative");
 
-    // Rejects amounts above 10
+    // What I did: rejected sugar above 10.
     if (sugar > 10) throw new Error("Too much sugar");
 
-    // Stores the validated value
+    // What I did: saved the valid amount.
     this._sugar = sugar;
   }
 }
 
-// Creates a ModernChai instance (default _sugar is 2)
+// What I did: created a ModernChai (starts at 2 spoons).
 const m = new ModernChai();
-// Uses the setter to set sugar to 10
+// What I did: used the setter to set sugar to 10.
 m.sugar = 10;
-// Uses the getter to read and print sugar
+// What I did: used the getter and printed sugar.
 console.log(m.sugar);
 
-// Static members belong to the class itself, not each instance
-
 class EkChai {
-  // Static property: accessed as EkChai.shopName, not instance.shopName
+  // What I did: put shopName on the class itself, not on each instance.
   static shopName = "chai wala";
 
-  // Parameter property: `public flavour` creates and assigns this.flavour automatically
+  // What I did: used a parameter property — `public flavour` creates this.flavour.
   constructor(public flavour: string) {}
 }
 
-// Reads the static property from the class (not from an instance)
+// What I did: read the static shop name from the class.
 console.log(EkChai.shopName);
 
-// Abstract classes cannot be instantiated directly; they define a contract for subclasses
-
+// What I did: declared an abstract drink type that cannot be `new`ed directly.
 abstract class Drinks {
-  // Abstract method: subclasses must implement make()
+  // What I did: forced every subclass to implement make().
   abstract make(): void;
 }
 
-// Concrete subclass that implements the abstract make method
+// What I did: wrote a concrete drink that implements make().
 class Mychai extends Drinks {
-  // Required implementation of Drinks.make
+  // What I did: provided the required make() body.
   make() {
-    // Logs that this concrete drink is being made
+    // What I did: logged that this chai is being made.
     console.log("Making my chai");
   }
 }
 
-// Composition over inheritance: build behavior by combining objects
-
-// Small helper class that knows how to heat
+// What I did: wrote a small helper that only knows how to heat.
 class Heater {
-  // Empty heat method (placeholder for heating logic)
+  // What I did: left heat() empty as a placeholder.
   heat() {}
 }
-// Machine that depends on a Heater (has-a relationship) instead of extending it
+// What I did: built a machine that has-a Heater instead of extending Heater.
 class ChaiMakerMachine {
-  // Constructor injects a private heater dependency (also creates this.heater)
+  // What I did: injected heater as a private constructor property.
   constructor(private heater: Heater) {}
-  // Public method that uses the heater then makes chai
+  // What I did: added makeChai to use the heater, then log.
   makeChai() {
-    // Delegates heating to the composed Heater instance
+    // What I did: asked the composed heater to heat.
     this.heater.heat();
-    // Then logs that chai is being made
+    // What I did: logged that chai is being made.
     console.log("Making chai");
   }
 }

@@ -1,120 +1,131 @@
 /**
- * TOPICS COVERED — type vs interface, unions, intersections
- * ---------------------------------------------------------
- * 1. type aliases for object shapes
- * 2. Passing typed objects into functions
- * 3. interface definitions and class implements
- * 4. String literal unions ("small" | "medium" | "large")
- * 5. Intersection types (A & B = must have both shapes)
- * 6. Optional properties (?)
- * 7. readonly properties
+ * TOPICS — type aliases vs interfaces, unions, intersections
+ * ----------------------------------------------------------
+ * `type` names a shape (or a union / intersection). `interface` also names
+ * an object shape and is often used with `implements` on classes.
+ * A union (A | B) is "one of". An intersection (A & B) is "both".
+ *
+ * What you practice here:
+ * - type Order passed into functions
+ * - interface + class implements
+ * - string literal unions
+ * - intersection types
+ * - optional (?) and readonly fields
+ *
+ * EXAMPLE USES
+ * - makeChai(order) / serverChai(order) → kitchen + waiter share one Order type
+ * - Chai1 implements CupSize → cup object must be small | medium | large
+ * - orderChai1("masala") → only three tea names in a dropdown
+ * - cup: MasalaChai1 → must have teaLeaves AND masala
+ * - User.bio? → profile bio can be skipped
+ * - Config.appName readonly → brand name locked after boot
  */
 
-// Defines an Order type alias: the shape of an order object
+// What I did: named the shape of one chai order.
 type Order = {
-  // type of chai as a string (e.g. "masala")
+  // What I did: required the chai type as a string.
   type: string;
-  // how much sugar (numeric)
+  // What I did: required a numeric sugar amount.
   sugar: number;
-  // whether the chai is strong
+  // What I did: required a strong/not-strong flag.
   strong: boolean;
 };
 
-// Function that accepts any value matching the Order type
+// What I did: wrote a function that only accepts Order-shaped objects.
 function makeChai(order: Order) {
-  // Logs the whole order object
+  // What I did: logged the whole order.
   console.log(order);
 }
 
-// Another function that also requires an Order-shaped argument
+// What I did: wrote a second function that also requires Order (same contract).
 function serverChai(order: Order) {
-  // Logs the order (same pattern as makeChai)
+  // What I did: logged the order again (serve step).
   console.log(order);
 }
 
-// Interface describing a tea recipe's liquid amounts
+// What I did: described a tea recipe with water and milk amounts.
 interface TeaRecipe {
-  // Milliliters (or units) of water
+  // What I did: required water units.
   water: number;
-  // Milliliters (or units) of milk
+  // What I did: required milk units.
   milk: number;
 }
 
-// Example of a class that would implement TeaRecipe (commented out)
+// What I did: left a class example commented — it would implement TeaRecipe.
 // class MasalaChai implements TeaRecipe {
 //   water = 100;
 //   milk = 50;
 // }
 
-// Interface that constrains size to one of three literal strings
+// What I did: constrained size to three exact words.
 interface CupSize {
-  // size must be exactly "small", "medium", or "large"
+  // What I did: size must be "small", "medium", or "large".
   size: "small" | "medium" | "large";
 }
 
-// Class that promises to satisfy the CupSize interface
+// What I did: made a class that promises to satisfy CupSize.
 class Chai1 implements CupSize {
-  // Property required by CupSize; default value is "small"
+  // What I did: added the required size field, defaulting to "small".
   size: "small" | "medium" | "large" = "small";
 }
 
-// Union of string literals: only these three tea names are allowed
+// What I did: allowed only three tea name strings.
 type TeaType = "masala" | "ginger" | "lemon";
 
-// Function parameter t must be one of the TeaType literals
+// What I did: required the function argument to be one of those tea names.
 function orderChai1(t: TeaType) {
-  // Logs the chosen tea type
+  // What I did: logged the chosen tea.
   console.log(t);
 }
 
-// Base object type with tea leaves amount
+// What I did: described the base recipe: tea leaves only.
 type BaseChai = {
-  // Number of tea leaves (or units)
+  // What I did: required teaLeaves.
   teaLeaves: number;
 };
 
-// Extra ingredients type with masala amount
+// What I did: described extra masala spice.
 type Extra = { masala: number };
 
-// Intersection (&): MasalaChai1 must have ALL properties of BaseChai AND Extra
+// What I did: combined both shapes — MasalaChai1 must have teaLeaves and masala.
 type MasalaChai1 = BaseChai & Extra;
 
-// Object that satisfies both teaLeaves and masala
+// What I did: created an object that satisfies the intersection.
 const cup: MasalaChai1 = {
-  // From Extra
+  // What I did: filled Extra.masala.
   masala: 10,
-  // From BaseChai
+  // What I did: filled BaseChai.teaLeaves.
   teaLeaves: 100,
 };
 
-// User type with an optional bio field
+// What I did: described a user with an optional bio.
 type User = {
-  // Required username string
+  // What I did: required username.
   username: string;
-  // Optional bio (? means it may be omitted)
+  // What I did: allowed bio to be omitted.
   bio?: string;
 };
 
-// Valid: both username and bio provided
+// What I did: created a user with both fields.
 const u1: User = { username: "John", bio: "I am a developer" };
-// Valid: bio omitted because it is optional
+// What I did: created a user without bio (valid because bio is optional).
 const u2: User = { username: "Jane" };
 
-// Config type with a readonly property
+// What I did: described config with a locked app name.
 type Config = {
-  // appName can be set at creation but not reassigned later
+  // What I did: marked appName readonly after creation.
   readonly appName: string;
-  // version is a normal mutable number
+  // What I did: left version mutable.
   version: number;
 };
 
-// Creates a Config object with both required fields
+// What I did: created a config object with both required fields.
 const cfg: Config = {
-  // Required readonly string
+  // What I did: set the app name (cannot change later).
   appName: "My App",
-  // Required mutable number
+  // What I did: set version to 1.0.
   version: 1.0,
 };
 
-// Would error: readonly properties cannot be reassigned after creation
+// What I did: left a forbidden reassignment commented out (readonly).
 // cfg.appName = "My App 2";
